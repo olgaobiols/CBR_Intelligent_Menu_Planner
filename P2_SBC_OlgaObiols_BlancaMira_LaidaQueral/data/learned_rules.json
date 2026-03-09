@@ -1,0 +1,21 @@
+{
+    "counters": {
+        "ingredients": {
+            "tomato": 1,
+            "ceba": 2,
+            "soy": 1,
+            "lemon": 1,
+            "hazelnut": 1,
+            "fish": 1
+        },
+        "pairs": {
+            "seabass|truffle": 3
+        }
+    },
+    "global_rules": {
+        "ingredients": [],
+        "pairs": [
+            "seabass|truffle"
+        ]
+    }
+}
