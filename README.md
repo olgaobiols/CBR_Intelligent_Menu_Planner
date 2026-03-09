@@ -1,68 +1,61 @@
-# Raonament Basat en Casos per a la Generació Intel·ligent de Menús
+# Case-Based Reasoning for Intelligent Menu Generation
 
-Sistema de **Raonament Basat en Casos (CBR) híbrid** dissenyat per a la generació i recomanació personalitzada de menús gastronòmics per a esdeveniments, combinant coneixement simbòlic (ontologies) i subsimbòlic (espais vectorials latents).
+A **Hybrid Case-Based Reasoning (CBR)** system designed to plan and recommend personalized gastronomic menus for events. [cite_start]This project integrates symbolic knowledge (ontologies) with sub-symbolic representations (FlavorGraph latent vector spaces) to solve complex culinary constraints[cite: 1].
 
-Projecte realitzat per a l'assignatura **Sistemes Basats en el Coneixement (SBC)** del **Grau en Intel·ligència Artificial (UPC)**.
+[cite_start]Developed as part of the **Knowledge-Based Systems (SBC)** course for the **Bachelor's Degree in Artificial Intelligence (UPC)**[cite: 1].
 
-## Autores
+## Authors
+- [cite_start]**Blanca Mira Fradera** [cite: 1]
+- [cite_start]**Laida Queral Llopart** [cite: 1]
+- [cite_start]**Olga Obiols Fuentes** [cite: 1]
 
-* **Blanca Mira Fradera**
-* **Laida Queral Llopart**
-* **Olga Obiols Fuentes**
+## Problem Overview
+[cite_start]The system automates menu planning for a catering company ("RicoRico"), handling diverse requirements[cite: 1]:
+- [cite_start]**Hard Constraints**: Management of 15 normalized allergy categories and strict diets (vegan, halal, celiac, etc.)[cite: 1].
+- [cite_start]**Qualitative Preferences**: Preferred culinary styles (Japanese, smoked, tropical), event formality, and seasonality[cite: 1].
+- [cite_start]**Logistics**: Guest count and target budget optimization[cite: 1].
 
-## Idea del problema
+[cite_start]Unlike rule-based systems, this CBR approach uses "algorithmic creativity" to **adapt** existing recipes to new user constraints while ensuring food safety[cite: 1].
 
-L'objectiu és resoldre el problema de la planificació de menús per a l'empresa de càtering fictícia **RicoRico**. El sistema ha de proposar menús coherents que s'ajustin a una gran varietat de factors:
+## Implementation: The CBR Cycle
+[cite_start]The project implements the full 4R cycle[cite: 1, 36, 35, 37]:
 
-* **Restriccions dures**: Al·lèrgies (15 categories normalitzades) i dietes estrictes (vegà, halal, celiac, etc.).
-* **Objectius qualitatius**: Estil culinari preferit (japonès, fumat, tropical, etc.), formalitat de l'acte i temporada.
-* **Limitacions logístiques**: Nombre de comensals i pressupost objectiu.
+1. [cite_start]**Retrieve**: Uses a weighted global similarity function and *Adaptation-Guided Retrieval* to find the most useful cases that are easily adaptable to the user's specific restrictions[cite: 36].
+2. **Reuse & Adapt**:
+    - **Symbolic Adaptation**: Handles dietary restrictions and "Banned Pairs" (ingredients rejected together by the user).
+    - [cite_start]**Sub-symbolic Adaptation**: Utilizes **FlavorGraph** embeddings and *Vector Steering* to perform creative ingredient substitutions based on molecular and flavor profiles[cite: 15].
+    - [cite_start]**Technique Module**: Selects cooking techniques (standard vs. haute cuisine) and uses a *Rollback* mechanism to stay within budget[cite: 9].
+    - [cite_start]**Beverage Module**: Dynamic pairings based on structural and aromatic affinity[cite: 10].
+3. **Revise**: Multi-dimensional evaluation (global satisfaction, taste, originality). [cite_start]Features a **Dual Memory Architecture** to distinguish between personal preferences (Channel A) and learned domain consensus (Channel B)[cite: 35].
+4. [cite_start]**Retain**: Selective retention policy that learns new cases based on their utility, novelty, and safety[cite: 37].
 
-A diferència dels sistemes basats en regles rígides, aquest model utilitza la creativitat algorísmica per **adaptar** casos previs a noves realitats, garantint sempre la seguretat alimentària.
+## Technologies
+- [cite_start]**Python**: Core logic and CBR cycle orchestration[cite: 12].
+- [cite_start]**FlavorGraph**: Pre-trained vector embeddings for calculating semantic and chemical distances between ingredients[cite: 15].
+- [cite_start]**Gemini API (LLM)**: Used exclusively as a formalization layer to generate the final menu text and dish presentations[cite: 1].
+- [cite_start]**Hugging Face**: Menu image generation for a complete visual experience[cite: 1].
 
-## Cicle CBR implementat
+## Repository Structure
+- [cite_start]`/src`: Implementation of cycle phases (`Retriever.py`, `Revise.py`, `Retain.py`) and specialized operators[cite: 36, 35, 37].
+- [cite_start]`/data`: Knowledge base including ingredients, beverages, latent styles, and the case base[cite: 43, 47, 45, 48].
+- [cite_start]`/models`: Mathematical representation of FlavorGraph embeddings[cite: 40].
 
-El projecte implementa completament el cicle de les 4 R's del Raonament Basat en Casos:
+## How to Run
+1. Install the required Python dependencies.
+2. Configure your Gemini API key (optional, for advanced text generation).
+3. Execute the main orchestrator:
+   ```bash
+   python src/main.py
+    ```
 
-1. **Retrieve (Recuperació)**: Selecciona els casos més útils mitjançant una funció de similitud global ponderada i l'estratègia *Adaptation-Guided Retrieval*, que prioritza casos fàcilment adaptables a les restriccions del nou usuari.
-2. **Reuse (Reutilització i Adaptació)**:
-* **Adaptació Simbòlica**: Gestió de restriccions i "Parelles Vetades" (ingredients que l'usuari rebutja junts).
-* **Adaptació Subsimbòlica**: Ús de **FlavorGraph** i tècniques de *Vector Steering* per realitzar substitucions creatives d'ingredients basades en perfils moleculars i de sabor.
-* **Mòdul de Tècniques**: Selecció i assignació de tècniques de cuina (estàndard o alta cuina) amb un mecanisme de *Rollback* per ajustar-se al pressupost.
-* **Mòdul de Begudes**: Maridatge dinàmic basat en afinitat estructural i aromàtica.
+## Key Features & Explainability (XCBR)
+* 
+**Explainability**: Every decision (pairing, allergy substitution) is justified to the user in natural language.
 
 
-3. **Revise (Revisió)**: Avaluació multidimensional (satisfacció global, gust, originalitat). Implementa una **Arquitectura de Memòria Dual** que distingeix entre preferències personals (Canal A) i regles globals de domini apreses per consens (Canal B).
-4. **Retain (Retenció)**: Política de retenció selectiva que aprèn nous casos si són prou útils, nous i segurs.
+* 
+**Active Learning**: If multiple users reject a specific combination, the system automatically generates a **Global Constraint Rule**.
 
-## Tecnologies
 
-* **Python**: Nucli de la lògica i orquestració del cicle CBR.
-* **FlavorGraph**: Embeddings vectorials pre-entrenats per al càlcul de distàncies semàntiques i químiques entre ingredients.
-* **Gemini API (LLM)**: Utilitzat exclusivament com a capa de formalització per generar la redacció final de la carta i les presentacions dels plats.
-* **Hugging Face**: Generació d'imatges dels menús per a una experiència visual completa.
-
-## Estructura del repositori
-
-* `/src`: Implementació de les fases del cicle (`Retriever.py`, `Revise.py`, `Retain.py`) i operadors especialitzats (ingredients, begudes, tècniques).
-* `/data`: Base de coneixement (ingredients, begudes, estils) i memòria del sistema (base de casos, regles apreses).
-* `/models`: Representació matemàtica del *FlavorGraph* (`.pickle`).
-
-## Com executar
-
-1. Instal·la les dependències de Python necessàries.
-2. Configura la teva clau d'API per a Gemini (opcional, per a la generació de text avançada).
-3. Executa l'orquestrador principal:
-
-```bash
-python src/main.py
-
-```
-
-## Resultats i Explicabilitat (XCBR)
-
-El sistema destaca per la seva transparència i capacitat d'aprenentatge:
-
-* **Explicabilitat**: Totes les decisions (maridatges, substitucions per al·lèrgia) es justifiquen a l'usuari final en llenguatge natural.
-* **Aprenentatge Actiu**: Quan diversos usuaris rebutgen una combinació (ex: llobarro amb tòfona), el sistema genera automàticament una **Regla de Restricció Global**.
-* **Robustesa**: Validat mitjançant jocs de prova complexos que inclouen des de sopars informals fins a banquets corporatius massius amb múltiples restriccions dietètiques simultànies.
+* 
+**Robustness**: Validated with complex test cases ranging from informal dinners to large corporate banquets.
